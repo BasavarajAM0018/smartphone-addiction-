@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-image: url('{{ url_for("static", filename="logs.jpg") }}');
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #2e7d32;
+            overflow: hidden;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        .navbar h2 { margin: 0; font-size: 20px; }
+        .navbar .user-block { display:flex; gap:12px; align-items:center; }
+        .container { max-width: 1000px; margin: 24px auto; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 8px; box-shadow: 0 2px 14px rgba(0,0,0,0.08); }
+        h1 { text-align: center; color: #333; margin-bottom: 10px; }
+        .log-entry { border: 1px solid #e6e6e6; border-radius: 8px; margin-top: 16px; padding: 14px; background-color: #fff; }
+        .log-header { display: flex; justify-content: space-between; align-items: center; gap:12px; flex-wrap:wrap; }
+        .meta-left { display:flex; gap:12px; align-items:center; color:#333; }
+        .meta-left .date { font-weight:700; color:#111; }
+        .meta-left .age { font-size:0.95em; color:#555; }
+        .meta-left .user { font-size:0.95em; color:#555; }
+        .prediction-badge { padding: 8px 12px; border-radius: 14px; font-weight: 800; color: #fff; display:inline-block; }
+        .badge-addicted { background: linear-gradient(90deg,#f44336,#d32f2f); }
+        .badge-not { background: linear-gradient(90deg,#4caf50,#2e7d32); }
+        .details { margin-top: 12px; display: none; }
+        .toggle-btn { background-color: #1976d2; color: white; padding: 8px 10px; border: none; border-radius: 6px; cursor: pointer; font-weight:700; }
+        table { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 8px 10px; border: 1px solid #eee; text-align: left; }
+        th { background:#fafafa; font-weight:700; color:#333; }
+        .answer-yes { color:#00695c; font-weight:700; }
+        .answer-no  { color:#9e9e9e; font-weight:700; }
+        @media (max-width:700px) { .log-header { flex-direction: column; align-items:flex-start; gap:8px; } .navbar { flex-direction: column; align-items:flex-start; gap:8px; } }
+    </style>
+
+    <script>
+        // Toggle by element id string (e.g. 'details-0')
+        function toggleDetails(elemId) {
+            const details = document.getElementById(elemId);
+            if (!details) return;
+            details.style.display = (details.style.display === "block") ? "none" : "block";
+            if (details.style.display === "block") details.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    </script>
+</head>
+<body>
+    <div class="navbar">
+        <h2>Phone Addiction Tracker</h2>
+        <div class="user-block">
+            <span style="font-weight:700;">👤 {{ username or 'Guest' }}</span>
+            <a href="{{ url_for('predict') }}" style="color:white; text-decoration:none; font-weight:700;">Predict</a>
+            <a href="{{ url_for('logout') }}" style="color:white; text-decoration:none; font-weight:700;">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Your Prediction Logs</h1>
+
+        {% if logs %}
+            {% for log in logs %}
+                <div class="log-entry">
+                    <div class="log-header">
+                        <div class="meta-left">
+                            <div class="date">{{ log.timestamp }}</div>
+                            <div class="age">Age: <strong>{{ log.age or '—' }}</strong></div>
+                            <div class="user">User: <strong>{{ log.username or username or '—' }}</strong></div>
+                        </div>
+
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <div class="prediction-badge {% if 'Addicted' in log.prediction %}badge-addicted{% else %}badge-not{% endif %}">
+                                {{ log.prediction }}
+                            </div>
+                            <button class="toggle-btn" onclick="toggleDetails('details-{{ loop.index0 }}')">View Details</button>
+                        </div>
+                    </div>
+
+                    <div class="details" id="details-{{ loop.index0 }}">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:70%;">Question</th>
+                                    <th style="width:30%;">Your Answer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question, answer in log.answers %}
+                                    <tr>
+                                        <td>{{ question }}</td>
+                                        <td class="{{ 'answer-yes' if answer=='Yes' else 'answer-no' }}">{{ answer }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No logs available yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

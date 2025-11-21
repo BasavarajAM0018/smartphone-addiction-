@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <style>
+        :root{
+            --bg:#f7f7f7;
+            --card-bg:#ffffff;
+            --text:#222;
+            --muted:#666;
+            --accent:#2b67f6;
+        }
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{
+            font-family: "Arial", sans-serif;
+            background-color: var(--bg);
+            background-image: url('{{ url_for("static", filename="result.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:24px;
+            color:var(--text);
+        }
+
+        .card{
+            width:100%;
+            max-width:900px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+            border-radius:14px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.12);
+            padding:28px;
+            display:grid;
+            grid-template-columns: 1fr 360px;
+            gap:22px;
+            align-items:start;
+        }
+
+        /* Responsive: single column on small screens */
+        @media (max-width:880px){
+            .card{ grid-template-columns: 1fr; padding:20px; }
+        }
+
+        .left {
+            padding-right:8px;
+        }
+
+        h1{
+            font-size:22px;
+            margin-bottom:6px;
+            color: #1f2937;
+        }
+        .meta{ color:var(--muted); margin-bottom:18px; }
+
+        .result-row{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:10px;
+            flex-wrap:wrap;
+        }
+
+        .result-label{ font-size:16px; color:var(--muted); }
+        .result-val{ font-weight:700; font-size:18px; color:#111; }
+
+        .percentage{
+            font-size:18px;
+            font-weight:800;
+            color:#0b61d6;
+            margin-bottom:12px;
+        }
+
+        /* Badge */
+        .badge{
+            display:inline-block;
+            padding:8px 12px;
+            border-radius:10px;
+            font-weight:800;
+            margin-bottom:14px;
+            box-shadow:0 6px 18px rgba(13, 27, 63, 0.04);
+            letter-spacing:0.2px;
+        }
+        .cat-severe{ background:#ffecec; color:#b30000; }
+        .cat-moderate{ background:#fff7e6; color:#b36b00; }
+        .cat-mild{ background:#eef9ef; color:#1b7f2a; }
+        .cat-low{ background:#eef6ff; color:#1647a6; }
+
+        /* Symptoms & Tips boxes */
+        .box{
+            background: linear-gradient(180deg,#fff,#fbfbff);
+            border-radius:10px;
+            padding:14px;
+            margin-bottom:14px;
+            box-shadow:0 6px 18px rgba(0,0,0,0.04);
+        }
+        .box h3{ font-size:16px; margin-bottom:8px; color:#111; }
+        .box ul{ margin-left:18px; color:var(--muted); }
+        .box ul li{ margin:8px 0; line-height:1.45; }
+
+        /* Right column image & actions */
+        .right {
+            text-align:center;
+            padding-left:8px;
+            display:flex;
+            flex-direction:column;
+            gap:12px;
+            align-items:center;
+        }
+
+        .stage-img{
+            width:100%;
+            max-width:320px;
+            border-radius:12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .icon-large{
+            width:72px;
+            height:72px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:50%;
+            font-size:30px;
+            color:#fff;
+            background:var(--accent);
+            box-shadow:0 8px 22px rgba(43,103,246,0.16);
+        }
+
+        .actions{ display:flex; gap:12px; margin-top:8px; flex-wrap:wrap; justify-content:center;}
+        .btn{
+            background:var(--accent);
+            color:#fff;
+            border:none;
+            border-radius:8px;
+            padding:10px 14px;
+            font-weight:700;
+            text-decoration:none;
+            display:inline-block;
+            cursor:pointer;
+        }
+        .btn.secondary{ background:#6b7280; }
+
+        /* small meta text */
+        .small{ font-size:13px; color:var(--muted); margin-top:6px; }
+
+    </style>
+</head>
+<body>
+    <div class="card" role="main">
+        <div class="left">
+            <h1>Smartphone Addiction Prediction</h1>
+            <div class="meta">This summary is generated from your answers. Use the suggested tips to reduce unhealthy phone habits.</div>
+
+            <div class="result-row">
+                <div class="result-label">Your result:</div>
+                <div class="result-val">{{ result }}</div>
+            </div>
+
+            <div class="percentage">Addiction percentage: <strong>{{ percentage }}%</strong></div>
+
+            <!-- Category badge -->
+            <div>
+                {% set c = category %}
+                {% if 'Severe' in c %}
+                    <div class="badge cat-severe">{{ category }}</div>
+                {% elif 'Moderate' in c %}
+                    <div class="badge cat-moderate">{{ category }}</div>
+                {% elif 'Mild' in c %}
+                    <div class="badge cat-mild">{{ category }}</div>
+                {% else %}
+                    <div class="badge cat-low">{{ category }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Symptoms -->
+            <div class="box" aria-labelledby="symptoms-title">
+                <h3 id="symptoms-title"><i class="fas fa-exclamation-circle" style="margin-right:8px;color:#e07b39;"></i> Common symptoms</h3>
+                <ul>
+                    {% for s in symptoms %}
+                        <li>{{ s }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Tips -->
+            <div class="box" aria-labelledby="tips-title">
+                <h3 id="tips-title"><i class="fas fa-lightbulb" style="margin-right:8px;color:#2b67f6;"></i> Tips to reduce phone use</h3>
+                <ul>
+                    {% for t in tips %}
+                        <li>{{ t }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="small">Tip: You can retake the quiz or go to the home page to explore other resources.</div>
+        </div>
+
+        <div class="right" aria-hidden="false">
+            <!-- icon -->
+            <div class="icon-large" title="{{ category }}">
+                {% if 'Severe' in c %}
+                    <i class="fas fa-fire" style="font-size:28px"></i>
+                {% elif 'Moderate' in c %}
+                    <i class="fas fa-exclamation-triangle" style="font-size:24px"></i>
+                {% elif 'Mild' in c %}
+                    <i class="fas fa-info-circle" style="font-size:24px"></i>
+                {% else %}
+                    <i class="fas fa-check" style="font-size:24px"></i>
+                {% endif %}
+            </div>
+
+            <!-- Category-specific image -->
+            <div>
+                {% if 'Severe' in c %}
+                    <img class="stage-img" src="{{ url_for('static', filename='img/severe.png') }}" alt="Severe Addiction">
+                {% elif 'Moderate' in c %}
+                    <img class="stage-img" src="{{ url_for('static', filename='img/moderate.png') }}" alt="Moderate Addiction">
+                {% elif 'Mild' in c %}
+                    <img class="stage-img" src="{{ url_for('static', filename='img/mild.png') }}" alt="Mild Addiction">
+                {% else %}
+                    <img class="stage-img" src="{{ url_for('static', filename='img/low.png') }}" alt="Low Risk">
+                {% endif %}
+            </div>
+
+            <div class="actions" role="group" aria-label="result actions">
+                <a class="btn" href="{{ url_for('predict') }}"><i class="fas fa-undo" style="margin-right:8px"></i>Try Again</a>
+                <a class="btn secondary" href="{{ url_for('home') }}"><i class="fas fa-home" style="margin-right:8px"></i>Home</a>
+            </div>
+
+            <div class="small" style="max-width:300px; text-align:center;">
+                Want a personalized 7-day plan for your stage? Add a "Start Plan" button and route to `/stage_resources/<stage>` in your app to serve downloadable plans.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>About - Phone Addiction Tracker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f3f3f3;
+      background-image: url('{{ url_for("static", filename="about.jpg") }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .overlay {
+      background: rgba(255,255,255,0.95);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+    .navbar {
+      background-color: #2e7d32;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      flex-wrap: wrap;
+    }
+    .navbar h2 { margin: 0; font-size: 20px; }
+    .navlinks a {
+      color: white;
+      text-decoration: none;
+      margin-left: 16px;
+      font-weight: bold;
+    }
+    .navlinks a:hover { text-decoration: underline; }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #388e3c; text-align: center; margin-bottom: 20px; }
+    h2.section { color: #2e7d32; margin-top: 18px; }
+    p { font-size: 18px; line-height: 1.7; color: #333; }
+    ul { margin-left: 20px; color: #333; }
+    .highlight { color: #2e7d32; font-weight: bold; }
+    .small { font-size: 14px; color: #666; }
+    .contact { margin-top: 14px; }
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; align-items: flex-start; }
+      .navlinks a { margin: 6px 0 0 0; display: inline-block; }
+      .container { margin: 20px 10px; padding: 20px; }
+      p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="navbar">
+      <h2>Phone Addiction Tracker</h2>
+      <div class="navlinks">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('predict') }}">Take Test</a>
+        <a href="{{ url_for('about') }}">About</a>
+        {% if username %}
+          <a href="{{ url_for('logs') }}">My Logs</a>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('register') }}">Register</a>
+          <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="container" role="main">
+      <h1>About This Application</h1>
+
+      <h2 class="section">Introduction</h2>
+      <p>
+        The <span class="highlight">Phone Addiction Tracker</span> helps users understand their smartphone usage and spot early signs of dependence.
+        By answering a short set of behavior- and emotion-based questions, you receive an easy-to-read % score, a risk category, common symptoms, and simple tips to improve balance.
+      </p>
+
+      <h2 class="section">Purpose</h2>
+      <p>This app is designed to:</p>
+      <ul>
+        <li>Increase awareness of digital habits.</li>
+        <li>Identify early signs of problematic phone use.</li>
+        <li>Provide actionable tips to reduce screen time.</li>
+        <li>Help students, professionals, parents and counselors monitor progress over time.</li>
+      </ul>
+
+      <h2 class="section">How it Works</h2>
+      <p>The tool uses <strong>18 short questions</strong> that cover daily routines, emotional triggers, and usage patterns. Responses are analyzed by:</p>
+      <ul>
+        <li>A trained machine-learning model (if available) that computes a probability of addiction.</li>
+        <li>A rule-based fallback that converts the percentage of "Yes" answers into an addiction percentage.</li>
+        <li>Automatic handling for extremes: all "Yes" → 100% (Severe), all "No" → 0% (Low Risk).</li>
+      </ul>
+
+      <h2 class="section">Features</h2>
+      <ul>
+        <li>User registration and secure login</li>
+        <li>18-question addiction test</li>
+        <li>Clear addiction percentage and category (Low / Mild / Moderate / Severe)</li>
+        <li>Tailored symptoms and practical tips for each category</li>
+        <li>Logs to review your past results</li>
+        <li>Simple, mobile-friendly interface</li>
+      </ul>
+
+      <h2 class="section">Who Can Use This?</h2>
+      <p>This app is useful for students, working professionals, parents, teachers, counselors, and anyone who wants to manage screen time and build healthier phone habits.</p>
+
+      <h2 class="section">Why This Matters</h2>
+      <p>Excessive phone use can affect sleep, concentration, relationships, and mental well-being. Early recognition and small, consistent changes can significantly improve daily functioning.</p>
+
+      <!-- VIDEO SECTION ADDED HERE -->
+      <h2 class="section">About Video</h2>
+      <p>
+        Watch this short video to understand how the Phone Addiction Tracker works and why it is helpful for maintaining healthy digital habits:
+      </p>
+
+      <video controls style="width:100%; border-radius:10px; box-shadow:0 3px 10px rgba(0,0,0,0.2); margin-bottom:25px;">
+        <source src="{{ url_for('static', filename='about_video.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <!-- END VIDEO SECTION -->
+
+      <h2 class="section">Future Enhancements</h2>
+      <ul>
+        <li>Progress graphs to visualize improvement over time</li>
+        <li>Weekly usage summaries and goal-setting features</li>
+        <li>Downloadable PDF report of results and recommended actions</li>
+        <li>Dark mode and accessibility improvements</li>
+      </ul>
+
+      <h2 class="section">Contact</h2>
+      <p class="contact small">Want to suggest improvements or collaborate? Add your contact details below so users can reach you.</p>
+      <p class="small">
+        Email: <em>madalageribasavaraja@gmail.com</em><br>
+        Instagram / Twitter: <em>@basu.a.m</em>
+      </p>
+
+      <p class="small" style="margin-top:18px;">
+        <strong>Note:</strong> This tool is for informational/self-help purposes and does not replace medical diagnosis.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

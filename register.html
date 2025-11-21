@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Smartphone Addiction Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('{{ url_for("static", filename="register.jpg") }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem 2rem;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #00ffcc;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00ffcc;
+        }
+
+        .content {
+            padding: 100px 30px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            max-width: 400px;
+            margin: 50px auto;
+            border-radius: 20px;
+        }
+
+        .content h2 {
+            font-size: 36px;
+            color: #ffcc00;
+        }
+
+        .content p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 2px solid #00ffcc;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #00cc99;
+        }
+
+        .buttons {
+            margin-top: 30px;
+        }
+
+        .buttons button {
+            background-color: #00ffcc;
+            color: black;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .buttons button:hover {
+            background-color: #00cc99;
+            transform: scale(1.1);
+        }
+
+        .flash-message {
+            color: white;
+            background-color: #ff6666;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .flash-success {
+            background-color: #66ff66;
+        }
+
+        .flash-danger {
+            background-color: #ff6666;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .content {
+                padding: 60px 20px;
+            }
+
+            .content h2 {
+                font-size: 28px;
+            }
+
+            .content p {
+                font-size: 16px;
+            }
+
+            .form-group input {
+                font-size: 14px;
+            }
+
+            .buttons button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>📱 Smartphone Addiction</h1>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2>Create an Account</h2>
+        <p>
+            Register to get started with the Smartphone Addiction Predictor. Please enter your details below to create an account.
+        </p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message {% for category in messages %}flash-{{ category[0] }}{% endfor %}">
+                    {% for message in messages %}
+                        {{ message[1] }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('register') }}" method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <div class="buttons">
+                <button type="submit">Register</button>
+            </div>
+        </form>
+
+        <p>Already have an account? <a href="/login" style="color: #00ffcc;">Login here</a></p>
+    </div>
+
+</body>
+</html>
