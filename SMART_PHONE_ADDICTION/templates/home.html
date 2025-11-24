@@ -1,0 +1,197 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Addiction Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('{{ url_for("static", filename="home.jpg") }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem 2rem;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #00ffcc;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00ffcc;
+        }
+
+        .content {
+            padding: 100px 30px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            max-width: 800px;
+            margin: 50px auto;
+            border-radius: 20px;
+        }
+
+        .content h2 {
+            font-size: 36px;
+            color: #ffcc00;
+        }
+
+        .content p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            margin-top: 30px;
+        }
+
+        .buttons a {
+            background-color: #00ffcc;
+            color: black;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .buttons a:hover {
+            background-color: #00cc99;
+        }
+
+        /* ---- VIDEO STYLES ---- */
+        .video-section {
+            max-width: 900px;
+            margin: 40px auto 60px;
+            text-align: center;
+            background-color: rgba(0,0,0,0.7);
+            padding: 25px;
+            border-radius: 15px;
+            color: #ffcc00;
+        }
+
+        .video-title {
+            font-size: 26px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; 
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav-links a {
+                padding: 10px 0;
+            }
+
+            .content {
+                padding: 60px 20px;
+            }
+
+            .content h2 {
+                font-size: 28px;
+            }
+
+            .content p {
+                font-size: 16px;
+            }
+
+            .video-title {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>📱 Smartphone Addiction</h1>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/login">Login</a>
+            <a href="/about">About</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2>Welcome to the Smartphone Addiction Predictor</h2>
+        <p>
+            This intelligent system evaluates your smartphone usage habits and predicts whether you're likely experiencing smartphone addiction.
+            Built using machine learning models and an interactive web interface, this tool helps users reflect on their digital well-being.
+        </p>
+
+        <div class="buttons">
+            <a href="/register">Get Started</a>
+            <a href="/predict">Take the Test</a>
+        </div>
+    </div>
+
+    <!-- 💠 NEW VIDEO SECTION ADDED HERE 💠 -->
+    <div class="video-section">
+        <div class="video-title">📹 What if you spend too much time on phone - Cell Phone Addiction</div>
+
+        <div class="video-container">
+            <iframe
+                src="https://www.youtube.com/embed/o3toTucBkuI"
+                title="YouTube video"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+    <!-- END VIDEO SECTION -->
+
+</body>
+</html>

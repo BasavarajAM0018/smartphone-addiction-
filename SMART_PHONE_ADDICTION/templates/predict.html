@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Addiction - Smartphone Addiction Predictor</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('{{ url_for("static", filename="predict.jpg") }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem 2rem;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #00ffcc;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00ffcc;
+        }
+
+        .content {
+            padding: 40px 30px;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.6);
+            max-width: 700px;
+            margin: 50px auto;
+            border-radius: 20px;
+        }
+
+        .content h2 {
+            font-size: 32px;
+            color: #ffcc00;
+            margin-bottom: 6px;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-top: 10px;
+            margin-bottom: 18px;
+        }
+
+        .user-info {
+            display:flex;
+            justify-content:center;
+            gap:20px;
+            margin-bottom:20px;
+            align-items:center;
+            color:#fff;
+        }
+        .user-info .name { font-weight:700; }
+        .user-info .age-input label { font-weight:700; margin-right:8px; }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+            color: #fff;
+        }
+
+        .form-group label {
+            font-size: 15px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .form-group input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .age-field {
+            display:inline-block;
+        }
+
+        .buttons {
+            margin-top: 22px;
+            text-align:center;
+        }
+
+        .buttons button {
+            background-color: #00ffcc;
+            color: black;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+        }
+
+        .buttons button:hover {
+            background-color: #00cc99;
+            transform: scale(1.03);
+        }
+
+        .flash-message {
+            color: white;
+            background-color: #ff6666;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .flash-success {
+            background-color: #66ff66;
+        }
+
+        .flash-danger {
+            background-color: #ff6666;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 30px 18px;
+                margin: 30px 12px;
+            }
+            .user-info { flex-direction: column; gap:8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1>📱 Smartphone Addiction</h1>
+        <div class="nav-links">
+            <span style="margin-right: 15px; font-weight: bold;">👤 {{ username or 'Guest' }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('logs') }}">View Logs</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2>Predict Your Smartphone Addiction</h2>
+        <p>Answer the following questions to predict your smartphone addiction level.</p>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message {% for category in messages %}flash-{{ category[0] }}{% endfor %}">
+                    {% for message in messages %}
+                        {{ message[1] }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Logged-in user display and Age input (Option B: ask every time) -->
+        <div class="user-info">
+            <div class="name">Logged in as: <strong>{{ username }}</strong></div>
+
+            <div class="age-input">
+                <label for="age" style="color:#fff; font-weight:700;">Age:</label>
+                <input type="number" id="age" name="age" min="5" max="120" placeholder="e.g. 20" required style="padding:6px 8px; border-radius:6px; border:none;"/>
+            </div>
+        </div>
+
+        <form action="{{ url_for('predict') }}" method="POST">
+            <!-- We include the age input inside the form so it is submitted with the survey -->
+            <input type="hidden" name="username_display" value="{{ username }}">
+
+            <!-- Move age input inside the form so it posts -->
+            <div style="display:none;">
+                <!-- The visible age field above is NOT in the form; replicate it here but hidden will be synced via JS below -->
+                <input type="number" id="age_hidden" name="age" min="5" max="120" required>
+            </div>
+
+            <!-- Questions -->
+            {% for i, q in questions %}
+                <div class="form-group">
+                    <label for="q{{ i }}">{{ q }}</label><br>
+                    <input type="radio" id="q{{ i }}_yes" name="q{{ i }}" value="1" required> Yes
+                    <input type="radio" id="q{{ i }}_no" name="q{{ i }}" value="0" required> No
+                </div>
+            {% endfor %}
+
+            <div class="buttons">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Copy the visible age input value into the hidden form field before submit
+        (function(){
+            const visibleAge = document.getElementById('age');
+            const hiddenAge = document.getElementById('age_hidden');
+            const form = document.querySelector('form');
+
+            // Keep hidden field in sync
+            visibleAge.addEventListener('input', function() {
+                hiddenAge.value = visibleAge.value;
+            });
+
+            // ensure value is copied at submit time (extra safety)
+            form.addEventListener('submit', function() {
+                hiddenAge.value = visibleAge.value;
+            });
+        })();
+    </script>
+
+</body>
+</html>
